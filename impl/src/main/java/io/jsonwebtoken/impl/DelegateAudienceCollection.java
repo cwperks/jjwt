@@ -38,6 +38,17 @@ public class DelegateAudienceCollection<P> implements ClaimsMutator.AudienceColl
     }
 
     @Override
+    public P requireAll(boolean requireAll) {
+        delegate.requireAll(requireAll);
+        return parent;
+    }
+
+    @Override
+    public boolean requireAll() {
+        return delegate.requireAll();
+    }
+
+    @Override
     public ClaimsMutator.AudienceCollection<P> add(String s) {
         delegate.add(s);
         return this;

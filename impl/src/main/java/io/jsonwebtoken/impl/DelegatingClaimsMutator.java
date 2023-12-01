@@ -107,6 +107,17 @@ public class DelegatingClaimsMutator<T extends MapMutator<String, Object, T> & C
             }
 
             @Override
+            public T requireAll(boolean requireAll) {
+                this.requireAll = requireAll;
+                return super.and();
+            }
+
+            @Override
+            public boolean requireAll() {
+                return requireAll;
+            }
+
+            @Override
             public T and() {
                 put(DefaultClaims.AUDIENCE, Collections.asSet(getCollection()));
                 return super.and();

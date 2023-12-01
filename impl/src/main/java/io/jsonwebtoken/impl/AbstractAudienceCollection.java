@@ -28,6 +28,7 @@ import java.util.Collection;
  */
 abstract class AbstractAudienceCollection<P> extends DefaultNestedCollection<String, P>
         implements ClaimsMutator.AudienceCollection<P> {
+    protected boolean requireAll = true;
     protected AbstractAudienceCollection(P parent, Collection<? extends String> seed) {
         super(parent, seed);
     }

@@ -53,6 +53,7 @@ import java.security.PrivateKey;
 import java.security.Provider;
 import java.security.PublicKey;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -169,6 +170,20 @@ public class DefaultJwtParserBuilder implements JwtParserBuilder {
     @Override
     public JwtParserBuilder requireAudience(String audience) {
         expectedClaims.audience().add(audience).and();
+        return this;
+    }
+
+    @Override
+    public JwtParserBuilder requireAudiences(List<String> audiences, boolean requireAll) {
+        if (audiences != null) {
+            for (String audience : audiences) {
+                if (requireAll) {
+                    expectedClaims.audience().add(audience).and();
+                } else {
+                    expectedClaims.audience().add(audience);
+                }
+            }
+        }
         return this;
     }
 

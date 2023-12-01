@@ -245,5 +245,9 @@ public interface ClaimsMutator<T extends ClaimsMutator<T>> {
         // DO NOT REMOVE EVER. This is a required RFC feature, but marked as deprecated to discourage its use
         @Deprecated
         P single(String aud);
+
+        P requireAll(boolean requireAll);
+
+        boolean requireAll();
     }
 }

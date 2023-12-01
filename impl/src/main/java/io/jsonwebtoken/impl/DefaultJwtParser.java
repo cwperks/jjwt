@@ -721,6 +721,8 @@ public class DefaultJwtParser extends AbstractParser<Jwt<?, ?>> implements JwtPa
 
     private void validateExpectedClaims(Header header, Claims claims) {
 
+        expectedClaims.audience();
+
         final Claims expected = expectedClaims.build();
 
         for (String expectedClaimName : expected.keySet()) {
@@ -748,11 +750,27 @@ public class DefaultJwtParser extends AbstractParser<Jwt<?, ?>> implements JwtPa
                 }
                 throw new MissingClaimException(header, claims, expectedClaimName, expectedClaimValue, msg);
             } else if (expectedClaimValue instanceof Collection) {
+                boolean requireAll = true;
+
+                if (DefaultClaims.AUDIENCE.getName().equals(expectedClaimName)) {
+                    requireAll = expectedClaims.audience().requireAll();
+                }
+
+                boolean containsAny = false;
                 Collection<?> expectedValues = (Collection<?>) expectedClaimValue;
                 Collection<?> actualValues = actualClaimValue instanceof Collection ? (Collection<?>) actualClaimValue :
                         Collections.setOf(actualClaimValue);
                 for (Object expectedValue : expectedValues) {
                     if (!Collections.contains(actualValues.iterator(), expectedValue)) {
+                        if (requireAll) {
+                            String msg = String.format(MISSING_EXPECTED_CLAIM_VALUE_MESSAGE_TEMPLATE,
+                                    expectedValue, expectedClaimName, actualValues);
+                            throw new IncorrectClaimException(header, claims, expectedClaimName, expectedClaimValue, msg);
+                        }
+                    } else {
+                        containsAny = true;
+                    }
+                    if (!containsAny) {
                         String msg = String.format(MISSING_EXPECTED_CLAIM_VALUE_MESSAGE_TEMPLATE,
                                 expectedValue, expectedClaimName, actualValues);
                         throw new IncorrectClaimException(header, claims, expectedClaimName, expectedClaimValue, msg);

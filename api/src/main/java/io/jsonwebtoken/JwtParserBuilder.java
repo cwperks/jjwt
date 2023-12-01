@@ -32,6 +32,7 @@ import java.security.PrivateKey;
 import java.security.Provider;
 import java.security.PublicKey;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -159,6 +160,19 @@ public interface JwtParserBuilder extends Builder<JwtParser> {
      * @see IncorrectClaimException
      */
     JwtParserBuilder requireAudience(String audience);
+
+    /**
+     * Ensures that the parsed JWT contains an {@code aud} claim with the value in the expected list of audiences.
+     * If missing or if the parsed value does not contain the specified value, an exception will be thrown
+     * indicating that the JWT is invalid and may not be used.
+     *
+     * @param audiences the required value(s) of the {@code aud} header parameter.
+     * @param requireAll if {@code true}, all of the specified audiences must be present in the parsed JWT
+     * @return the parser builder for method chaining.
+     * @see MissingClaimException
+     * @see IncorrectClaimException
+     */
+    JwtParserBuilder requireAudiences(List<String> audiences, boolean requireAll);
 
     /**
      * Ensures that the specified {@code iss} exists in the parsed JWT.  If missing or if the parsed
